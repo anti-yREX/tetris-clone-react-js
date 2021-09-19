@@ -9,7 +9,7 @@ export const PlayAreaGrid = styled.div`
 `;
 
 export const Pixel = styled.div`
-    background: #26d6dea8;
+    background:  ${props => props.isEmpty ? '#26d6dea8' : 'red' };
     width: 100%;
     height: 100;
 `;
