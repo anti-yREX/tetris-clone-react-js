@@ -11,7 +11,6 @@ export const PlayAreaGrid = styled.div`
 export const Pixel = styled.div`
     background: ${props => props.isEmpty ? '#26d6dea8' : props.color };
     width: 100%;
-    height: 100;
 `;
 
 export const FlexWrapper = styled.div`
