@@ -11,7 +11,7 @@ const MAX_ROWS = 20;
 class PlayArea extends React.Component {
     constructor(props) {
         super(props);
-        const currentBlock = this.getInitialBlock('i');
+        const currentBlock = this.getInitialBlock('l');
         console.log(currentBlock);
         this.state = {
             pixels: this.getInitialPixels(currentBlock),
@@ -29,6 +29,7 @@ class PlayArea extends React.Component {
     rotateCurrentBlock = () => {
         const { currentBlock } = this.state;
         const newCurrentBlock = rotateCurrentBlock(currentBlock);
+        console.log('newCurrent', newCurrentBlock);
         this.setState({
             pixels: this.getInitialPixels(newCurrentBlock),
             currentBlock: newCurrentBlock,
