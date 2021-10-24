@@ -11,7 +11,7 @@ const MAX_ROWS = 20;
 class PlayArea extends React.Component {
     constructor(props) {
         super(props);
-        const currentBlock = this.getInitialBlock('j');
+        const currentBlock = this.getInitialBlock('t');
         console.log(currentBlock);
         this.state = {
             pixels: this.getInitialPixels(currentBlock),

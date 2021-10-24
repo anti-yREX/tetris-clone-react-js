@@ -475,7 +475,114 @@ const rotateJBlock = (currentBlock, state) => {
 
 
 const rotateTBlock = (currentBlock, state) => {
-    return currentBlock;
+    if (state === 0) {
+        const { pixels } = currentBlock;
+        const newPixels = [
+            {
+                xCord: pixels[0].xCord + 1,
+                yCord: pixels[0].yCord - 1,
+            },
+            {
+                xCord: pixels[1].xCord,
+                yCord: pixels[1].yCord,
+            },
+            {
+                xCord: pixels[2].xCord - 1,
+                yCord: pixels[2].yCord + 1,
+            },
+            {
+                xCord: pixels[3].xCord - 1,
+                yCord: pixels[3].yCord - 1,
+            },
+        ];
+
+        return {
+            ...currentBlock,
+            pixels: boundaryCorrection(newPixels),
+            state: 1,
+        }
+    }
+    if (state === 1) {
+        const { pixels } = currentBlock;
+        const newPixels = [
+            {
+                xCord: pixels[0].xCord + 1,
+                yCord: pixels[0].yCord + 1,
+            },
+            {
+                xCord: pixels[1].xCord,
+                yCord: pixels[1].yCord,
+            },
+            {
+                xCord: pixels[2].xCord - 1,
+                yCord: pixels[2].yCord - 1,
+            },
+            {
+                xCord: pixels[3].xCord + 1,
+                yCord: pixels[3].yCord - 1,
+            },
+        ];
+
+        return {
+            ...currentBlock,
+            pixels: boundaryCorrection(newPixels),
+            state: 2,
+        }
+    }
+    if (state === 2) {
+        const { pixels } = currentBlock;
+        const newPixels = [
+            {
+                xCord: pixels[0].xCord - 1,
+                yCord: pixels[0].yCord + 1,
+            },
+            {
+                xCord: pixels[1].xCord,
+                yCord: pixels[1].yCord,
+            },
+            {
+                xCord: pixels[2].xCord + 1,
+                yCord: pixels[2].yCord - 1,
+            },
+            {
+                xCord: pixels[3].xCord + 1,
+                yCord: pixels[3].yCord + 1,
+            },
+        ];
+
+        return {
+            ...currentBlock,
+            pixels: boundaryCorrection(newPixels),
+            state: 3,
+        }
+    }
+    if (state === 3) {
+        const { pixels } = currentBlock;
+        const newPixels = [
+            {
+                xCord: pixels[0].xCord - 1,
+                yCord: pixels[0].yCord - 1,
+            },
+            {
+                xCord: pixels[1].xCord,
+                yCord: pixels[1].yCord,
+            },
+            {
+                xCord: pixels[2].xCord + 1,
+                yCord: pixels[2].yCord + 1,
+            },
+            {
+                xCord: pixels[3].xCord - 1,
+                yCord: pixels[3].yCord + 1,
+            },
+        ];
+
+        return {
+            ...currentBlock,
+            pixels: boundaryCorrection(newPixels),
+            state: 0,
+        }
+    }
 }
 
 const rotateCurrentBlock = (currentBlock) => {
