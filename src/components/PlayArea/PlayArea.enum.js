@@ -24,19 +24,19 @@ const BlockData = {
         color: 'green',
         pixels: [
             {
-                xCord: 4,
-                yCord: 0,
-            },
-            {
                 xCord: 5,
                 yCord: 0,
             },
             {
-                xCord: 3,
-                yCord: 1,
+                xCord: 4,
+                yCord: 0,
             },
             {
                 xCord: 4,
+                yCord: 1,
+            },
+            {
+                xCord: 3,
                 yCord: 1,
             },
         ],
@@ -74,8 +74,8 @@ const BlockData = {
                 yCord: 1,
             },
             {
-                xCoord: 4,
-                yCoord: 2,
+                xCord: 4,
+                yCord: 2,
             },
             {
                 xCord: 3,
