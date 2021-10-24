@@ -607,6 +607,44 @@ const rotateCurrentBlock = (currentBlock) => {
     }
 }
 
+const currentBlockMoveLeft = (currentBlock) => {
+    const newPixels = currentBlock.pixels.map(current => ({
+        ...current,
+        xCord: current.xCord - 1,
+    }));
+    return {
+        ...currentBlock,
+        pixels: boundaryCorrection(newPixels),
+    }
+}
+
+const currentBlockMoveRight = (currentBlock) => {
+    const newPixels = currentBlock.pixels.map(current => ({
+        ...current,
+        xCord: current.xCord + 1,
+    }));
+    return {
+        ...currentBlock,
+        pixels: boundaryCorrection(newPixels),
+    }
+}
+
+const currentBlockFalling = (currentBlock) => {
+    const newPixels = currentBlock.pixels.map(current => {
+        return {
+            ...current,
+            yCord: current.yCord + 1,         
+        };
+    });
+    return {
+        ...currentBlock,
+        pixels: newPixels,
+    };
+}
+
 export {
     rotateCurrentBlock,
+    currentBlockMoveLeft,
+    currentBlockMoveRight,
+    currentBlockFalling,
 };

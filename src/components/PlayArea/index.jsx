@@ -3,7 +3,12 @@ import {
     PlayAreaGrid,
     Pixel,
 } from './PlayArea.styles';
-import { rotateCurrentBlock } from './PlayAreaLogic';
+import {
+    rotateCurrentBlock,
+    currentBlockMoveLeft,
+    currentBlockMoveRight,
+    currentBlockFalling,
+} from './PlayAreaLogic';
 import { BlockData } from './PlayArea.enum'
 const MAX_COLS = 10;
 const MAX_ROWS = 20;
@@ -11,33 +16,85 @@ const MAX_ROWS = 20;
 class PlayArea extends React.Component {
     constructor(props) {
         super(props);
-        const currentBlock = this.getInitialBlock('t');
-        console.log(currentBlock);
+        const currentBlock = this.getInitialBlock('z');
         this.state = {
-            pixels: this.getInitialPixels(currentBlock),
+            pixels: this.getUpdatedPixels(currentBlock),
             currentBlock,
         };
     }
 
     onBodyKeyPress = (event) => {
-        console.log(event.key);
-        if (event.key === ' ') {
+        if (event.key === 'w') {
+            console.log(event.key);
             this.rotateCurrentBlock();
+        }
+        if (event.key === 'a') {
+            console.log(event.key);
+            this.currentBlockMoveLeft();
+        }
+        if (event.key === 'd') {
+            console.log(event.key);
+            this.currentBlockMoveRight();
         }
     }
 
     rotateCurrentBlock = () => {
         const { currentBlock } = this.state;
         const newCurrentBlock = rotateCurrentBlock(currentBlock);
-        console.log('newCurrent', newCurrentBlock);
         this.setState({
-            pixels: this.getInitialPixels(newCurrentBlock),
+            pixels: this.getUpdatedPixels(newCurrentBlock),
+            currentBlock: newCurrentBlock,
+        });
+    }
+
+    currentBlockMoveLeft = () => {
+        const { currentBlock } = this.state;
+        const newCurrentBlock = currentBlockMoveLeft(currentBlock);
+        this.setState({
+            pixels: this.getUpdatedPixels(newCurrentBlock),
+            currentBlock: newCurrentBlock,
+        });
+    }
+
+    currentBlockMoveRight = () => {
+        const { currentBlock } = this.state;
+        const newCurrentBlock = currentBlockMoveRight(currentBlock);
+        this.setState({
+            pixels: this.getUpdatedPixels(newCurrentBlock),
             currentBlock: newCurrentBlock,
         });
     }
 
     componentDidMount() {
+        // Key capture
         document.body.addEventListener('keypress', this.onBodyKeyPress);
+
+        // Falling Motion
+        this.fallingInterval = setInterval(this.currentBlockFalling, 1000);
+    }
+
+    currentBlockFalling = () => {
+        const { currentBlock } = this.state;
+        const newCurrentBlock = currentBlockFalling(currentBlock);
+        const hasBlockReachBottom = this.checkCurrentBlockReachBottom(newCurrentBlock);
+        console.log(hasBlockReachBottom, currentBlock, newCurrentBlock);
+        if (!hasBlockReachBottom) {
+            this.setState({
+                pixels: this.getUpdatedPixels(newCurrentBlock),
+                currentBlock: newCurrentBlock,
+            });
+        }
+    }
+
+    checkCurrentBlockReachBottom = (newCurrentBlock) => {
+        const { pixels } = newCurrentBlock;
+        pixels.forEach(pixel => {
+            if (pixel.yCord >= 19) {
+                clearInterval(this.fallingInterval);
+                return true;
+            }
+        })
+        return false;
     }
 
     getInitialBlock = (blockName) => {
@@ -93,7 +150,7 @@ class PlayArea extends React.Component {
         }
     }
 
-    getInitialPixels = (currentBlock) => {
+    getUpdatedPixels = (currentBlock) => {
         const { color, pixels } = currentBlock;
         const rowsArray = [];
         for(let i = 0; i < MAX_ROWS ; i+= 1) {
@@ -119,7 +176,6 @@ class PlayArea extends React.Component {
 
     render() {
         const { pixels } = this.state;
-        console.log(pixels);
         return (
             <PlayAreaGrid>
                 {pixels.map(row => (
