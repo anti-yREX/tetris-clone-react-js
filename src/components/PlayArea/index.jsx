@@ -16,10 +16,9 @@ const MAX_ROWS = 20;
 class PlayArea extends React.Component {
     constructor(props) {
         super(props);
-        const currentBlock = this.getInitialBlock('z');
         this.state = {
-            pixels: this.getUpdatedPixels(currentBlock),
-            currentBlock,
+            pixels: this.getInitialPixels(),
+            currentBlock: null,
         };
     }
 
@@ -42,7 +41,12 @@ class PlayArea extends React.Component {
         const { currentBlock } = this.state;
         const newCurrentBlock = rotateCurrentBlock(currentBlock);
         this.setState({
-            pixels: this.getUpdatedPixels(newCurrentBlock),
+            pixels: this.getUpdatedPixels({
+                updateForRotate: true,
+                data: {
+                    newCurrentBlock,
+                },
+            }),
             currentBlock: newCurrentBlock,
         });
     }
@@ -51,7 +55,12 @@ class PlayArea extends React.Component {
         const { currentBlock } = this.state;
         const newCurrentBlock = currentBlockMoveLeft(currentBlock);
         this.setState({
-            pixels: this.getUpdatedPixels(newCurrentBlock),
+            pixels: this.getUpdatedPixels({
+                updateForMove: true,
+                data: {
+                    newCurrentBlock,
+                },
+            }),
             currentBlock: newCurrentBlock,
         });
     }
@@ -60,7 +69,12 @@ class PlayArea extends React.Component {
         const { currentBlock } = this.state;
         const newCurrentBlock = currentBlockMoveRight(currentBlock);
         this.setState({
-            pixels: this.getUpdatedPixels(newCurrentBlock),
+            pixels: this.getUpdatedPixels({
+                updateForMove: true,
+                data: {
+                    newCurrentBlock,
+                },
+            }),
             currentBlock: newCurrentBlock,
         });
     }
@@ -69,32 +83,67 @@ class PlayArea extends React.Component {
         // Key capture
         document.body.addEventListener('keypress', this.onBodyKeyPress);
 
-        // Falling Motion
-        this.fallingInterval = setInterval(this.currentBlockFalling, 1000);
+        // Create a Block
+        this.createNewCurrentBlock();
+    }
+
+    createNewCurrentBlock = () => {
+        const currentBlock = this.getInitialBlock('l');
+        this.setState({
+            pixels: this.getUpdatedPixels({
+                addNewBlock: true,
+                data: {
+                    newCurrentBlock: currentBlock,
+                },
+            }),
+            currentBlock,
+        }, () => {
+            // Falling Motion
+            this.fallingInterval = setInterval(this.currentBlockFalling, 200);
+        });
     }
 
     currentBlockFalling = () => {
         const { currentBlock } = this.state;
-        const newCurrentBlock = currentBlockFalling(currentBlock);
-        const hasBlockReachBottom = this.checkCurrentBlockReachBottom(newCurrentBlock);
-        console.log(hasBlockReachBottom, currentBlock, newCurrentBlock);
-        if (!hasBlockReachBottom) {
-            this.setState({
-                pixels: this.getUpdatedPixels(newCurrentBlock),
-                currentBlock: newCurrentBlock,
-            });
+        if (currentBlock) {
+            const newCurrentBlock = currentBlockFalling(currentBlock);
+            const hasBlockReachBottom = this.checkCurrentBlockReachBottom(newCurrentBlock);
+            if (!hasBlockReachBottom) {
+                this.setState({
+                    pixels: this.getUpdatedPixels({
+                        updateForFall: true,
+                        data: {
+                            newCurrentBlock,
+                            currentBlock,
+                        },
+                    }),
+                    currentBlock: newCurrentBlock,
+                });
+            } else {
+                this.setState({
+                    pixels: this.addBlockToBottom(currentBlock),
+                });
+            }
         }
+    }
+
+    addBlockToBottom = (currentBlock) => {
+        const { color, pixels } = currentBlock;
+        const newPixels = [];
+        console.log(currentBlock);
+        return this.state.pixels;
     }
 
     checkCurrentBlockReachBottom = (newCurrentBlock) => {
         const { pixels } = newCurrentBlock;
+        let hasBlockReachBottom = false;
         pixels.forEach(pixel => {
-            if (pixel.yCord >= 19) {
+            if (pixel.yCord > 19) {
                 clearInterval(this.fallingInterval);
-                return true;
+                hasBlockReachBottom = true;
             }
-        })
-        return false;
+        });
+        return hasBlockReachBottom;
     }
 
     getInitialBlock = (blockName) => {
@@ -150,28 +199,61 @@ class PlayArea extends React.Component {
         }
     }
 
-    getUpdatedPixels = (currentBlock) => {
-        const { color, pixels } = currentBlock;
+    getInitialPixels = () => {
         const rowsArray = [];
         for(let i = 0; i < MAX_ROWS ; i+= 1) {
             const colsArray = [];
             for(let j = 0; j < MAX_COLS ; j += 1) {
-                if (
-                    pixels.find(cur => cur.xCord === j && cur.yCord === i)
-                ) {
-                    colsArray.push({
-                        color,
-                        isEmpty: false,
-                    });
-                } else {
-                    colsArray.push({
-                        isEmpty: true,
-                    });
-                }
+                colsArray.push({
+                    isEmpty: true,
+                });
             }
             rowsArray.push(colsArray);
         }
         return rowsArray;
+    }
+
+    getUpdatedPixels = (operation) => {
+        if (operation.addNewBlock) {
+            const { data: { newCurrentBlock } } = operation;
+            const { color, pixels: blockPixels } = newCurrentBlock;
+            const { pixels } = this.state;
+            const newPixels = pixels;
+            blockPixels.forEach(pixel => {
+                const { xCord, yCord } = pixel;
+                newPixels[yCord][xCord] = {
+                    isEmpty: false,
+                    color,
+                }
+            });
+            return newPixels;
+        }
+        if (operation.updateForFall) {
+            const {
+                data: {
+                    currentBlock,
+                    newCurrentBlock,
+                },
+            } = operation;
+            const { color, pixels: newBlockPixels } = newCurrentBlock;
+            const { pixels: oldBlockPixels } = currentBlock;
+            const { pixels } = this.state;
+            const newPixels = pixels;
+            oldBlockPixels.forEach(pixel => {
+                const { xCord, yCord } = pixel;
+                newPixels[yCord][xCord] = {
+                    isEmpty: true,
+                }
+            });
+            newBlockPixels.forEach(pixel => {
+                const { xCord, yCord } = pixel;
+                newPixels[yCord][xCord] = {
+                    isEmpty: false,
+                    color,
+                }
+            });
+            return newPixels;
+        }
     }
 
     render() {
