@@ -45,6 +45,7 @@ class PlayArea extends React.Component {
                 updateForRotate: true,
                 data: {
                     newCurrentBlock,
+                    currentBlock,
                 },
             }),
             currentBlock: newCurrentBlock,
@@ -59,6 +60,7 @@ class PlayArea extends React.Component {
                 updateForMove: true,
                 data: {
                     newCurrentBlock,
+                    currentBlock,
                 },
             }),
             currentBlock: newCurrentBlock,
@@ -73,6 +75,7 @@ class PlayArea extends React.Component {
                 updateForMove: true,
                 data: {
                     newCurrentBlock,
+                    currentBlock,
                 },
             }),
             currentBlock: newCurrentBlock,
@@ -228,7 +231,7 @@ class PlayArea extends React.Component {
             });
             return newPixels;
         }
-        if (operation.updateForFall) {
+        if (operation.updateForFall || operation.updateForRotate || operation.updateForMove) {
             const {
                 data: {
                     currentBlock,
@@ -253,6 +256,8 @@ class PlayArea extends React.Component {
                 }
             });
             return newPixels;
+        }
+        if (operation.updateForRotate) {
         }
     }
 
