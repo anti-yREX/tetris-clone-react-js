@@ -23,7 +23,7 @@ const BlockData = {
         ],
     },
     sData: {
-        color: 'green',
+        color: '#80ff00',
         pixels: [
             {
                 xCord: 5,

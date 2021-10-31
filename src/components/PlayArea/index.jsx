@@ -115,8 +115,25 @@ class PlayArea extends React.Component {
         const { currentBlock } = this.state;
         if (currentBlock) {
             const newCurrentBlock = currentBlockFalling(currentBlock);
-            const hasBlockReachBottom = this.checkCurrentBlockReachBottom(newCurrentBlock);
-            if (!hasBlockReachBottom) {
+            const hasReachBottomBlocks = this.checkCurrentBlockReachBottomBlocks(newCurrentBlock);
+            if (hasReachBottomBlocks) {
+                this.setState({
+                    pixels: this.getUpdatedPixels({
+                        addBlockToBottom: true,
+                        data: {
+                            currentBlock,
+                        },
+                    }),
+                }, () => {
+                    clearInterval(this.fallingInterval);
+                    // Create a Block
+                    this.createNewCurrentBlock();
+                });
+                return;
+            }
+            const hasReachBottom = this.checkCurrentBlockReachBottom(newCurrentBlock);
+            console.log(hasReachBottom, hasReachBottomBlocks, !hasReachBottom || !hasReachBottomBlocks);
+            if (!hasReachBottom) {
                 this.setState({
                     pixels: this.getUpdatedPixels({
                         updateForFall: true,
@@ -154,6 +171,22 @@ class PlayArea extends React.Component {
             }
         });
         return hasBlockReachBottom;
+    }
+
+    checkCurrentBlockReachBottomBlocks = (newCurrentBlock) => {
+        const { pixels } = newCurrentBlock;
+        const { pixels: screenPixels } = this.state;
+        let hasReachBottomBlocks = false;
+        pixels.forEach(pixel => {
+            const { xCord, yCord } = pixel;
+            if (screenPixels[yCord]) {
+                const currentPixel = screenPixels[yCord][xCord];
+                if (currentPixel?.isEmpty === false && currentPixel?.isBottom === true) {
+                    hasReachBottomBlocks = true;
+                }
+            }
+        });
+        return hasReachBottomBlocks;
     }
 
     getInitialBlock = (blockName) => {
