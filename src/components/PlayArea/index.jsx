@@ -9,7 +9,10 @@ import {
     currentBlockMoveRight,
     currentBlockFalling,
 } from './PlayAreaLogic';
-import { BlockData } from './PlayArea.enum'
+import { 
+    BlockNameList,
+    BlockData,
+} from './PlayArea.enum'
 const MAX_COLS = 10;
 const MAX_ROWS = 20;
 
@@ -91,7 +94,9 @@ class PlayArea extends React.Component {
     }
 
     createNewCurrentBlock = () => {
-        const currentBlock = this.getInitialBlock('l');
+        const randomIndex = Math.floor(Math.random() * 10) % 6;
+        console.log(randomIndex);
+        const currentBlock = this.getInitialBlock(BlockNameList[randomIndex]);
         this.setState({
             pixels: this.getUpdatedPixels({
                 addNewBlock: true,
@@ -124,17 +129,19 @@ class PlayArea extends React.Component {
                 });
             } else {
                 this.setState({
-                    pixels: this.addBlockToBottom(currentBlock),
+                    pixels: this.getUpdatedPixels({
+                        addBlockToBottom: true,
+                        data: {
+                            currentBlock,
+                        },
+                    }),
+                }, () => {
+                    clearInterval(this.fallingInterval);
+                    // Create a Block
+                    this.createNewCurrentBlock();
                 });
             }
         }
-    }
-
-    addBlockToBottom = (currentBlock) => {
-        const { color, pixels } = currentBlock;
-        const newPixels = [];
-        console.log(currentBlock);
-        return this.state.pixels;
     }
 
     checkCurrentBlockReachBottom = (newCurrentBlock) => {
@@ -257,7 +264,24 @@ class PlayArea extends React.Component {
             });
             return newPixels;
         }
-        if (operation.updateForRotate) {
+        if (operation.addBlockToBottom) {
+            const {
+                data: {
+                    currentBlock,
+                },
+            } = operation;
+            const { color, pixels: blockPixels } = currentBlock;
+            const { pixels } = this.state;
+            const newPixels = pixels;
+            blockPixels.forEach(pixel => {
+                const { xCord, yCord } = pixel;
+                newPixels[yCord][xCord] = {
+                    isEmpty: false,
+                    color,
+                    isBottom: true,
+                }
+            });
+            return newPixels;
         }
     }
 

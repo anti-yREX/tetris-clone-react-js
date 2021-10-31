@@ -1,3 +1,5 @@
+const BlockNameList = ['z', 's', 'l', 'j', 'o', 'i', 't'];
+
 const BlockData = {
     zData: {
         color: 'red',
@@ -149,5 +151,6 @@ const BlockData = {
 }
 
 export {
+    BlockNameList,
     BlockData,
 };
