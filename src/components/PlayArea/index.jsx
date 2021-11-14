@@ -77,6 +77,28 @@ class PlayArea extends React.Component {
         const { currentBlock } = this.state;
         const newCurrentBlock = currentBlockMoveLeft(currentBlock);
         const hasReachBottomBlocks = this.checkCurrentBlockReachBottomBlocks(newCurrentBlock);
+        if (hasReachBottomBlocks) {
+            return;
+        }
+        this.setState({
+            pixels: this.getUpdatedPixels({
+                updateForMove: true,
+                data: {
+                    newCurrentBlock,
+                    currentBlock,
+                },
+            }),
+            currentBlock: newCurrentBlock,
+        });
+    }
+
+    currentBlockMoveRight = () => {
+        const { currentBlock } = this.state;
+        const newCurrentBlock = currentBlockMoveRight(currentBlock);
+        const hasReachBottomBlocks = this.checkCurrentBlockReachBottomBlocks(newCurrentBlock);
+        if (hasReachBottomBlocks) {
+            return;
+        }
         this.setState({
             pixels: this.getUpdatedPixels({
                 updateForMove: true,
@@ -96,21 +118,6 @@ class PlayArea extends React.Component {
             clearInterval(this.fallingInterval);
         })
     };
-
-    currentBlockMoveRight = () => {
-        const { currentBlock } = this.state;
-        const newCurrentBlock = currentBlockMoveRight(currentBlock);
-        this.setState({
-            pixels: this.getUpdatedPixels({
-                updateForMove: true,
-                data: {
-                    newCurrentBlock,
-                    currentBlock,
-                },
-            }),
-            currentBlock: newCurrentBlock,
-        });
-    }
 
     componentDidMount() {
         // Key capture
@@ -133,7 +140,7 @@ class PlayArea extends React.Component {
             currentBlock,
         }, () => {
             // Falling Motion
-            this.fallingInterval = setInterval(this.currentBlockFalling, 500);
+            this.fallingInterval = setInterval(this.currentBlockFalling, 850);
         });
     }
 
@@ -158,18 +165,7 @@ class PlayArea extends React.Component {
                 return;
             }
             const hasReachBottom = this.checkCurrentBlockReachBottom(newCurrentBlock);
-            if (!hasReachBottom) {
-                this.setState({
-                    pixels: this.getUpdatedPixels({
-                        updateForFall: true,
-                        data: {
-                            newCurrentBlock,
-                            currentBlock,
-                        },
-                    }),
-                    currentBlock: newCurrentBlock,
-                });
-            } else {
+            if (hasReachBottom) {
                 this.setState({
                     pixels: this.getUpdatedPixels({
                         addBlockToBottom: true,
@@ -181,6 +177,17 @@ class PlayArea extends React.Component {
                     clearInterval(this.fallingInterval);
                     // Create a Block
                     this.createNewCurrentBlock();
+                });
+            } else {
+                this.setState({
+                    pixels: this.getUpdatedPixels({
+                        updateForFall: true,
+                        data: {
+                            newCurrentBlock,
+                            currentBlock,
+                        },
+                    }),
+                    currentBlock: newCurrentBlock,
                 });
             }
         }
@@ -362,13 +369,13 @@ class PlayArea extends React.Component {
             });
             newBlockPixels.forEach(pixel => {
                 const { xCord, yCord } = pixel;
-                // if (newPixels && newPixels[yCord] && newPixels[yCord][xCord]) {
+                if (newPixels && newPixels[yCord] && newPixels[yCord][xCord]) {
                     newPixels[yCord][xCord] = {
                         isEmpty: false,
                         color,
                         isBottom: operation.addBlockDirectlyToBottom,
                     }
-                // }
+                }
             });
             return newPixels;
         }

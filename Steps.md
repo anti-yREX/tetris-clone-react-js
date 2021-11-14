@@ -12,9 +12,9 @@ Core Mechanics:
 		- atleast one pixel collide with accumalated blocks - done
 - bottom blocks management - done
 
-- S key functionality 
+- S key functionality - done
 
-- movement check with accumalated blocks
+- movement check with accumalated blocks - done
 - rotation check with accumalated blocks
 - new block added check
 
