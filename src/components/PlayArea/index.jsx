@@ -134,6 +134,26 @@ class PlayArea extends React.Component {
     createNewCurrentBlock = () => {
         const randomIndex = Math.floor(Math.random() * 10) % 6;
         const currentBlock = this.getInitialBlock(BlockNameList[randomIndex]);
+        const hasCollidedWithBottomBlocks = this.checkCurrentBlockReachBottomBlocks(currentBlock);
+        if (hasCollidedWithBottomBlocks) {
+            const lastBlock = this.getLastBlock(currentBlock);
+            if (lastBlock) {
+                this.setState({
+                    pixels: this.getUpdatedPixels({
+                        addLastBlock: true,
+                        data: {
+                            lastBlock,
+                        },
+                    }),
+                    currentBlock: null,
+                }, () => {
+                    clearInterval(this.fallingInterval);
+                });
+            } else {
+                clearInterval(this.fallingInterval);
+            }
+            return;
+        }
         this.setState({
             pixels: this.getUpdatedPixels({
                 addNewBlock: true,
@@ -146,6 +166,34 @@ class PlayArea extends React.Component {
             // Falling Motion
             this.fallingInterval = setInterval(this.currentBlockFalling, 850);
         });
+    }
+
+    getLastBlock = (currentBlock) => {
+        const { pixels } = this.state;
+        let yDistance = 0;
+        for (let row in pixels) {
+            let isNotEmpty = false;
+            for (let pixel in pixels[row]) {
+                if (pixels[row][pixel].isEmpty === false) {
+                    isNotEmpty = true;
+                    break;
+                }
+            }
+            if (isNotEmpty) {
+                break;
+            }
+            yDistance += 1;
+        }
+        if (yDistance === 0) {
+            return null;
+        }
+        return {
+            ...currentBlock,
+            pixels: currentBlock.pixels.map(cur => ({
+                ...cur,
+                yCord: cur.yCord - (currentBlock.maxHeight - yDistance),
+            })),
+        }
     }
 
     currentBlockFalling = () => {
@@ -396,6 +444,27 @@ class PlayArea extends React.Component {
                     isEmpty: false,
                     color,
                     isBottom: true,
+                }
+            });
+            return newPixels;
+        }
+        if (operation.addLastBlock) {
+            const {
+                data: {
+                    lastBlock,
+                },
+            } = operation;
+            const { color, pixels: blockPixels } = lastBlock;
+            const { pixels } = this.state;
+            const newPixels = cloneDeepPixels(pixels);
+            blockPixels.forEach(pixel => {
+                const { xCord, yCord } = pixel;
+                if (yCord >= 0 && xCord >= 0) {
+                    newPixels[yCord][xCord] = {
+                        isEmpty: false,
+                        color,
+                        isBottom: true,
+                    }
                 }
             });
             return newPixels;

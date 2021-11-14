@@ -21,6 +21,7 @@ const BlockData = {
                 yCord: 1,
             },
         ],
+        maxHeight: 2,
     },
     sData: {
         color: '#80ff00',
@@ -42,6 +43,7 @@ const BlockData = {
                 yCord: 1,
             },
         ],
+        maxHeight: 2,
     },
     lData: {
         color: 'yellow',
@@ -63,6 +65,7 @@ const BlockData = {
                 yCord: 2,
             },
         ],
+        maxHeight: 3,
     },
     jData: {
         color: 'blue',
@@ -84,6 +87,7 @@ const BlockData = {
                 yCord: 2,
             },
         ],
+        maxHeight: 3,
     },
     oData: {
         color: 'orange',
@@ -105,6 +109,7 @@ const BlockData = {
                 yCord: 1,
             },
         ],
+        maxHeight: 2,
     },
     iData: {
         color: 'purple',
@@ -126,6 +131,7 @@ const BlockData = {
                 yCord: 3,
             },
         ],
+        maxHeight: 4,
     },
     tData: {
         color: 'brown',
@@ -147,6 +153,7 @@ const BlockData = {
                 yCord: 1,
             },
         ],
+        maxHeight: 2,
     },
 }
 

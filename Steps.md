@@ -16,17 +16,17 @@ Core Mechanics:
 
 - movement check with accumalated blocks - done
 - rotation check with accumalated blocks - done
-- new block added check
+- new block added check - done
 
 Queue:
 - queuing
 
 Scoring:
 - 1 line filled
-- 4 line 
+- 4 line
 - scoring
 
-
+Messages
 
 
 - finish touches if any
