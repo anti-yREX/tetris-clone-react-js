@@ -15,7 +15,17 @@ import {
 } from './PlayArea.enum'
 const MAX_COLS = 10;
 const MAX_ROWS = 20;
-
+const cloneDeepPixels = (oldPixelsArray) => {
+    const newPixels = [];
+    oldPixelsArray.forEach(row => {
+        const newRow = [];
+        row.forEach(pixel => {
+            newRow.push(Object.assign({}, pixel))
+        });
+        newPixels.push(newRow);
+    });
+    return newPixels;
+}
 class PlayArea extends React.Component {
     constructor(props) {
         super(props);
@@ -38,6 +48,14 @@ class PlayArea extends React.Component {
             console.log(event.key);
             this.currentBlockMoveRight();
         }
+        if (event.key === 's') {
+            console.log(event.key);
+            this.addBlockDirectlyToBottom();
+        }
+        if (event.key === 'x') {
+            console.log(event.key);
+            this.stopGame();
+        }
     }
 
     rotateCurrentBlock = () => {
@@ -58,6 +76,7 @@ class PlayArea extends React.Component {
     currentBlockMoveLeft = () => {
         const { currentBlock } = this.state;
         const newCurrentBlock = currentBlockMoveLeft(currentBlock);
+        const hasReachBottomBlocks = this.checkCurrentBlockReachBottomBlocks(newCurrentBlock);
         this.setState({
             pixels: this.getUpdatedPixels({
                 updateForMove: true,
@@ -69,6 +88,14 @@ class PlayArea extends React.Component {
             currentBlock: newCurrentBlock,
         });
     }
+
+    stopGame = () => {
+        this.setState({
+            currentBlock: null,
+        }, () => {
+            clearInterval(this.fallingInterval);
+        })
+    };
 
     currentBlockMoveRight = () => {
         const { currentBlock } = this.state;
@@ -95,7 +122,6 @@ class PlayArea extends React.Component {
 
     createNewCurrentBlock = () => {
         const randomIndex = Math.floor(Math.random() * 10) % 6;
-        console.log(randomIndex);
         const currentBlock = this.getInitialBlock(BlockNameList[randomIndex]);
         this.setState({
             pixels: this.getUpdatedPixels({
@@ -107,7 +133,7 @@ class PlayArea extends React.Component {
             currentBlock,
         }, () => {
             // Falling Motion
-            this.fallingInterval = setInterval(this.currentBlockFalling, 200);
+            this.fallingInterval = setInterval(this.currentBlockFalling, 500);
         });
     }
 
@@ -132,7 +158,6 @@ class PlayArea extends React.Component {
                 return;
             }
             const hasReachBottom = this.checkCurrentBlockReachBottom(newCurrentBlock);
-            console.log(hasReachBottom, hasReachBottomBlocks, !hasReachBottom || !hasReachBottomBlocks);
             if (!hasReachBottom) {
                 this.setState({
                     pixels: this.getUpdatedPixels({
@@ -159,6 +184,48 @@ class PlayArea extends React.Component {
                 });
             }
         }
+    }
+
+    addBlockDirectlyToBottom = () => {
+        clearInterval(this.fallingInterval);
+        const { currentBlock, pixels } = this.state;
+        const { pixels: currentBlockPixels } = currentBlock;
+        let minY = 19;
+        currentBlockPixels.forEach(pixel => {
+            const { xCord, yCord } = pixel;
+            let bottomPixelY = null;
+            for (let i = yCord; i <= 19 - yCord; i+= 1) {
+                if (pixels[yCord + i][xCord].isEmpty === false && pixels[yCord + i][xCord].isBottom === true) {
+                    bottomPixelY = i;
+                    break;
+                }
+            }
+            console.log(minY, bottomPixelY)
+            bottomPixelY = bottomPixelY === null ? (19 - yCord) : bottomPixelY - 1;
+            minY = minY < bottomPixelY ? minY : bottomPixelY;
+            console.log(minY, bottomPixelY)
+        })
+        const newCurrentBlock = {
+            ...currentBlock,
+            pixels: currentBlockPixels.map(cur => ({
+                ...cur,
+                yCord: cur.yCord + minY,
+            }))
+        };
+
+        this.setState({
+            currentBlock: newCurrentBlock,
+            pixels: this.getUpdatedPixels({
+                addBlockDirectlyToBottom: true,
+                data: {
+                    newCurrentBlock,
+                    currentBlock,
+                },
+            }),
+        }, () => {
+            // Create a Block
+            this.createNewCurrentBlock();
+        })
     }
 
     checkCurrentBlockReachBottom = (newCurrentBlock) => {
@@ -271,7 +338,12 @@ class PlayArea extends React.Component {
             });
             return newPixels;
         }
-        if (operation.updateForFall || operation.updateForRotate || operation.updateForMove) {
+        if (
+            operation.updateForFall ||
+            operation.updateForRotate ||
+            operation.updateForMove ||
+            operation.addBlockDirectlyToBottom
+        ) {
             const {
                 data: {
                     currentBlock,
@@ -281,7 +353,7 @@ class PlayArea extends React.Component {
             const { color, pixels: newBlockPixels } = newCurrentBlock;
             const { pixels: oldBlockPixels } = currentBlock;
             const { pixels } = this.state;
-            const newPixels = pixels;
+            const newPixels = cloneDeepPixels(pixels);
             oldBlockPixels.forEach(pixel => {
                 const { xCord, yCord } = pixel;
                 newPixels[yCord][xCord] = {
@@ -290,10 +362,13 @@ class PlayArea extends React.Component {
             });
             newBlockPixels.forEach(pixel => {
                 const { xCord, yCord } = pixel;
-                newPixels[yCord][xCord] = {
-                    isEmpty: false,
-                    color,
-                }
+                // if (newPixels && newPixels[yCord] && newPixels[yCord][xCord]) {
+                    newPixels[yCord][xCord] = {
+                        isEmpty: false,
+                        color,
+                        isBottom: operation.addBlockDirectlyToBottom,
+                    }
+                // }
             });
             return newPixels;
         }
