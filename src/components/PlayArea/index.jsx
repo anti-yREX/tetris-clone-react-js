@@ -61,6 +61,10 @@ class PlayArea extends React.Component {
     rotateCurrentBlock = () => {
         const { currentBlock } = this.state;
         const newCurrentBlock = rotateCurrentBlock(currentBlock);
+        const hasCollidedWithBottomBlocks = this.checkCurrentBlockReachBottomBlocks(newCurrentBlock);
+        if (hasCollidedWithBottomBlocks) {
+            return;
+        }
         this.setState({
             pixels: this.getUpdatedPixels({
                 updateForRotate: true,
@@ -76,8 +80,8 @@ class PlayArea extends React.Component {
     currentBlockMoveLeft = () => {
         const { currentBlock } = this.state;
         const newCurrentBlock = currentBlockMoveLeft(currentBlock);
-        const hasReachBottomBlocks = this.checkCurrentBlockReachBottomBlocks(newCurrentBlock);
-        if (hasReachBottomBlocks) {
+        const hasCollidedWithBottomBlocks = this.checkCurrentBlockReachBottomBlocks(newCurrentBlock);
+        if (hasCollidedWithBottomBlocks) {
             return;
         }
         this.setState({
@@ -95,8 +99,8 @@ class PlayArea extends React.Component {
     currentBlockMoveRight = () => {
         const { currentBlock } = this.state;
         const newCurrentBlock = currentBlockMoveRight(currentBlock);
-        const hasReachBottomBlocks = this.checkCurrentBlockReachBottomBlocks(newCurrentBlock);
-        if (hasReachBottomBlocks) {
+        const hasCollidedWithBottomBlocks = this.checkCurrentBlockReachBottomBlocks(newCurrentBlock);
+        if (hasCollidedWithBottomBlocks) {
             return;
         }
         this.setState({
@@ -207,10 +211,8 @@ class PlayArea extends React.Component {
                     break;
                 }
             }
-            console.log(minY, bottomPixelY)
             bottomPixelY = bottomPixelY === null ? (19 - yCord) : bottomPixelY - 1;
             minY = minY < bottomPixelY ? minY : bottomPixelY;
-            console.log(minY, bottomPixelY)
         })
         const newCurrentBlock = {
             ...currentBlock,

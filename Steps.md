@@ -15,7 +15,7 @@ Core Mechanics:
 - S key functionality - done
 
 - movement check with accumalated blocks - done
-- rotation check with accumalated blocks
+- rotation check with accumalated blocks - done
 - new block added check
 
 Queue:
