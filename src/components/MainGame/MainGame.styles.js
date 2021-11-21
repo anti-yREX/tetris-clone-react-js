@@ -20,10 +20,19 @@ export const BlockQueueWrapper = styled.div`
     border: 4px solid #f1f0f0;
     border-radius: 8px;
     min-width: 88px;
-    height: 254px;
+    height: 512px;
     overflow: hidden;
 `;
 
 export const FlexWrapper = styled.div`
     display: flex;
+`;
+
+export const BlockQueueGradient = styled.div`
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(0deg, #1a202c 45%, transparent 100%);
 `;

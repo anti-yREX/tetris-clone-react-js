@@ -20,7 +20,8 @@ Core Mechanics:
 
 Queue:
 - first render - done
-- state management - 
+- state management - done
+- add gradient effect - done
 
 Scoring:
 - 1 line filled

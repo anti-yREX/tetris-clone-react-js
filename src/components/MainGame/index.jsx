@@ -6,6 +6,7 @@ import {
     BlockQueueWrapper,
     FlexWrapper,
     MainGameWrapper,
+    BlockQueueGradient,
 } from './MainGame.styles';
 import BlockNameList from './MainGame.enum';
 class MainGame extends React.Component {
@@ -51,10 +52,15 @@ class MainGame extends React.Component {
                             queuePop={this.queuePop}
                         />
                     </PlayAreaWrapper>
-                    <div>
+                    <div
+                        style={{
+                            position: 'relative',
+                        }}
+                    >
                         <BlockQueueWrapper>
                             <BlockQueue queue={queue} />
                         </BlockQueueWrapper>
+                        <BlockQueueGradient />
                     </div>
                 </MainGameWrapper>
             </FlexWrapper>
