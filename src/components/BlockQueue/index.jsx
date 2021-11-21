@@ -27,10 +27,11 @@ class BlockQueue extends React.Component {
     }
 
     render() {
-        const { queue } = this.state;
+        const { queue } = this.props;
+        const queueData = queue.map(cur => this.getBlockData(cur));
         return (
             <React.Fragment>
-                    {queue.map((current) => (
+                    {queueData.map((current) => (
                         <BlockContainer
                             widthCount={current.maxWidth}
                             heightCount={current.maxHeight}

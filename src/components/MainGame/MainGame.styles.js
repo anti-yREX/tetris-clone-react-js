@@ -17,10 +17,11 @@ export const SideBar = styled.div`
 export const BlockQueueWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    border: 4px solid #584c4c;
+    border: 4px solid #f1f0f0;
     border-radius: 8px;
     min-width: 88px;
-    min-height: 232px;
+    height: 254px;
+    overflow: hidden;
 `;
 
 export const FlexWrapper = styled.div`

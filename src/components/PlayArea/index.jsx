@@ -132,8 +132,8 @@ class PlayArea extends React.Component {
     }
 
     createNewCurrentBlock = () => {
-        const randomIndex = Math.floor(Math.random() * 10) % 6;
-        const currentBlock = this.getInitialBlock(BlockNameList[randomIndex]);
+        const blockName = this.props.queuePop();
+        const currentBlock = this.getInitialBlock(blockName);
         const hasCollidedWithBottomBlocks = this.checkCurrentBlockReachBottomBlocks(currentBlock);
         if (hasCollidedWithBottomBlocks) {
             const lastBlock = this.getLastBlock(currentBlock);
