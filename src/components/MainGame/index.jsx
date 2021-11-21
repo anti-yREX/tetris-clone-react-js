@@ -1,4 +1,5 @@
 import React from 'react';
+import BlockQueue from '../BlockQueue';
 import PlayArea from '../PlayArea';
 import {
     PlayAreaWrapper,
@@ -21,7 +22,9 @@ class MainGame extends React.Component {
                         <PlayArea />
                     </PlayAreaWrapper>
                     <div>
-                        <BlockQueueWrapper />
+                        <BlockQueueWrapper>
+                            <BlockQueue />
+                        </BlockQueueWrapper>
                     </div>
                 </MainGameWrapper>
             </FlexWrapper>

@@ -19,7 +19,8 @@ Core Mechanics:
 - new block added check - done
 
 Queue:
-- queuing
+- first render - done
+- state management - 
 
 Scoring:
 - 1 line filled
