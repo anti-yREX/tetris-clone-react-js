@@ -24,9 +24,8 @@ Queue:
 - add gradient effect - done
 
 Scoring:
-- 1 line filled
-- 4 line
-- scoring
+- score state management
+- multiplier
 
 Messages
 
