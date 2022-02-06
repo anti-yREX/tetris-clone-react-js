@@ -24,10 +24,12 @@ Queue:
 - add gradient effect - done
 
 Scoring:
-- score state management
-- multiplier
+- score state management 
+- multiplier 1 2 3 4
 
 Messages
+- Tetris
+- Game Over
 
 
 - finish touches if any

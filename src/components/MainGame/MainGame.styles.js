@@ -34,5 +34,12 @@ export const BlockQueueGradient = styled.div`
     left: 0;
     height: 100%;
     width: 100%;
-    background: linear-gradient(0deg, #1a202c 45%, transparent 100%);
+    background: linear-gradient(0deg, #1a202c 25%, transparent 100%);
+`;
+
+export const ScoreWrapper = styled.div`
+    margin-right: 8px;
+    text-align: end;
+    color: white;
+    font-size: 24px;
 `;

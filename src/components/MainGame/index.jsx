@@ -7,12 +7,16 @@ import {
     FlexWrapper,
     MainGameWrapper,
     BlockQueueGradient,
+    ScoreWrapper,
+    ScoreLabel,
+    ScoreValue,
 } from './MainGame.styles';
 import BlockNameList from './MainGame.enum';
 class MainGame extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            score: 0,
             queue: this.getInitialQueue(),
         };
     }
@@ -24,6 +28,10 @@ class MainGame extends React.Component {
             queue.push(BlockNameList[randomIndex]);
         }
         return queue;
+    }
+
+    updateScore = (score) => {
+        this.setState({ score });
     }
 
     queuePop = () => {
@@ -42,14 +50,19 @@ class MainGame extends React.Component {
     }
 
     render() {
-        const { queue } = this.state;
+        const { score, queue } = this.state;
         return (
             <FlexWrapper>
                 <MainGameWrapper>
+                    <ScoreWrapper>
+                        <div>Score:</div>
+                        <div>{score}</div>
+                    </ScoreWrapper>
                     <PlayAreaWrapper>
                         <PlayArea
                             queue={queue}
                             queuePop={this.queuePop}
+                            updateScore={this.updateScore}
                         />
                     </PlayAreaWrapper>
                     <div
