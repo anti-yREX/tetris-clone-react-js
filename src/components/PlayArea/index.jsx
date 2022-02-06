@@ -9,8 +9,7 @@ import {
     currentBlockMoveRight,
     currentBlockFalling,
 } from './PlayAreaLogic';
-import { 
-    BlockNameList,
+import {
     BlockData,
 } from './PlayArea.enum'
 const MAX_COLS = 10;
@@ -60,6 +59,7 @@ class PlayArea extends React.Component {
 
     rotateCurrentBlock = () => {
         const { currentBlock } = this.state;
+        if (!currentBlock) return;
         const newCurrentBlock = rotateCurrentBlock(currentBlock);
         const hasCollidedWithBottomBlocks = this.checkCurrentBlockReachBottomBlocks(newCurrentBlock);
         if (hasCollidedWithBottomBlocks) {
@@ -79,6 +79,8 @@ class PlayArea extends React.Component {
 
     currentBlockMoveLeft = () => {
         const { currentBlock } = this.state;
+        console.log(currentBlock);
+        if (!currentBlock) return;
         const newCurrentBlock = currentBlockMoveLeft(currentBlock);
         const hasCollidedWithBottomBlocks = this.checkCurrentBlockReachBottomBlocks(newCurrentBlock);
         if (hasCollidedWithBottomBlocks) {
@@ -98,6 +100,7 @@ class PlayArea extends React.Component {
 
     currentBlockMoveRight = () => {
         const { currentBlock } = this.state;
+        if (!currentBlock) return;
         const newCurrentBlock = currentBlockMoveRight(currentBlock);
         const hasCollidedWithBottomBlocks = this.checkCurrentBlockReachBottomBlocks(newCurrentBlock);
         if (hasCollidedWithBottomBlocks) {
@@ -248,6 +251,7 @@ class PlayArea extends React.Component {
     addBlockDirectlyToBottom = () => {
         clearInterval(this.fallingInterval);
         const { currentBlock, pixels } = this.state;
+        if (!currentBlock) return;
         const { pixels: currentBlockPixels } = currentBlock;
         let minY = 19;
         currentBlockPixels.forEach(pixel => {
