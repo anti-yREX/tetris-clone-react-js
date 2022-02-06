@@ -23,6 +23,8 @@ Queue:
 - state management - done
 - add gradient effect - done
 
+delete line - 
+
 Scoring:
 - score state management 
 - multiplier 1 2 3 4
@@ -33,5 +35,6 @@ Messages
 
 
 - finish touches if any
+	- score display
 
 
