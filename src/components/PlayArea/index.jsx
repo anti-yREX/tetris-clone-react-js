@@ -79,7 +79,6 @@ class PlayArea extends React.Component {
 
     currentBlockMoveLeft = () => {
         const { currentBlock } = this.state;
-        console.log(currentBlock);
         if (!currentBlock) return;
         const newCurrentBlock = currentBlockMoveLeft(currentBlock);
         const hasCollidedWithBottomBlocks = this.checkCurrentBlockReachBottomBlocks(newCurrentBlock);
